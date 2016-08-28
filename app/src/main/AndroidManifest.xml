@@ -17,6 +17,12 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <activity
+            android:name="amanupdater.yoav.com.updaterforaman.LoadingActivity"
+            android:label="@string/app_name"
+            />
+
     </application>
 
 </manifest>

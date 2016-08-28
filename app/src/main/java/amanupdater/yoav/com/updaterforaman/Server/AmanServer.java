@@ -51,7 +51,7 @@ public class AmanServer {
             Map<String, String> map = new HashMap<String, String>();
 
             map.put("misparMoamad", id);
-            map.put("userPass", id);
+            map.put("userPass", password);
 
             System.out.println(Consts.REQUEST_PREFIX + "" + request);
             JSONObject jObj = json.getJSONFromUrl(Consts.REQUEST_PREFIX + "" + request, map);

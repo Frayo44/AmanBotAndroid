@@ -1,5 +1,6 @@
 package amanupdater.yoav.com.updaterforaman;
 import android.app.Activity;
+import android.app.IntentService;
 import android.app.ProgressDialog;
 import android.os.Bundle;
 
@@ -33,10 +34,24 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
+        Intent intent = getIntent();
 
         etIdText = (EditText) findViewById(R.id.etId);
         etPassword = (EditText) findViewById(R.id.etPassword);
         bLoggingButton = (Button) findViewById(R.id.btn_login);
+
+        if(intent != null)
+        {
+            String err = intent.getStringExtra("error");
+            if(err != null)
+            if(err.equals("-1"))
+            {
+                etIdText.setError("Incorrect id, try another one");
+            } else {
+                etPassword.setError("Incorrect password, try another one");
+            }
+        }
+
 
         bLoggingButton.setOnClickListener(new View.OnClickListener() {
 
@@ -49,33 +64,24 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void login() {
-        Log.d(TAG, "Login");
 
         if (!validate()) {
 
             return;
-       }
+        }
 
-        String email = etIdText.getText().toString();
+        String id = etIdText.getText().toString();
         String password = etPassword.getText().toString();
 
-        JSONObject jj = AmanServer.login(email, password);
 
-        try {
+        Intent intent = new Intent(MainActivity.this, LoadingActivity.class);
+        intent.putExtra("password", password);
+        intent.putExtra("id", id);
+        startActivity(intent);
+        finish();
 
-            JSONObject modiinJsonObject = jj.getJSONObject("d");
-            String isConnectrd = modiinJsonObject.getString("MisparMoamad");
-            if(isConnectrd.equals("-1") || isConnectrd.equals("-2"))
-            {
-                Toast.makeText(this, "Connection Failed", Toast.LENGTH_SHORT).show();
-            } else {
-                Toast.makeText(this, "Yay! Connected", Toast.LENGTH_SHORT).show();
-            }
+        Log.d(TAG, "Login");
 
-
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
 
     }
 
