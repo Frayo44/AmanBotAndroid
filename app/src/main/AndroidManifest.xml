@@ -23,6 +23,11 @@
             android:label="@string/app_name"
             />
 
+        <activity
+            android:name="amanupdater.yoav.com.updaterforaman.AmanMainActivity"
+            android:label="@string/app_name"
+            />
+
     </application>
 
 </manifest>

@@ -12,6 +12,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Random;
 
 import amanupdater.yoav.com.updaterforaman.Server.AmanServer;
 
@@ -22,8 +23,10 @@ public class LoadingActivity extends Activity {
 
     private AnimatedCircleLoadingView animatedCircleLoadingView;
 
-    private String id, password;
+    private String id, password, misparMoamad;
     private String errorId;
+    private String sessionId;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,6 +35,7 @@ public class LoadingActivity extends Activity {
 
         Intent intent = getIntent();
         this.errorId = "-1";
+        this.sessionId = null;
 
          id = intent.getStringExtra("id");
          password = intent.getStringExtra("password");
@@ -49,7 +53,11 @@ public class LoadingActivity extends Activity {
                     startActivity(intent);
                     finish();
                 } else {
-
+                    Intent intent = new Intent(LoadingActivity.this, AmanMainActivity.class);
+                    intent.putExtra("SessionId", sessionId);
+                    intent.putExtra("MisparMoamad", misparMoamad);
+                    startActivity(intent);
+                    finish();
                 }
             }
         });
@@ -65,19 +73,28 @@ public class LoadingActivity extends Activity {
             @Override
             public void run() {
                 try {
-                   // changePercent(50);
+
                     JSONObject jj = AmanServer.login(id, password);
+
                    // changePercent(100);
                     try {
 
+                        if(jj == null)
+                            animatedCircleLoadingView.stopFailure();
+
                         JSONObject modiinJsonObject = jj.getJSONObject("d");
-                        String isConnectrd = modiinJsonObject.getString("MisparMoamad");
-                        if(isConnectrd.length() < 4)
+
+                        misparMoamad = modiinJsonObject.getString("MisparMoamad");
+                        if(misparMoamad.length() < 4)
                         {
-                            errorId = isConnectrd;
+                            errorId = misparMoamad;
                             animatedCircleLoadingView.stopFailure();
                         } else {
-                            animatedCircleLoadingView.stopOk();
+                            sessionId = jj.getString("SessionId");
+                            if(sessionId != null)
+                                animatedCircleLoadingView.stopOk();
+                            else
+                                animatedCircleLoadingView.stopFailure();
                         }
                     } catch (JSONException e) {
                         e.printStackTrace();

@@ -31,10 +31,13 @@ public class JSONParser {
     static JSONObject jObj = null;
     static JSONArray jAry = null;
     static String json = "";
+
     // constructor
     public JSONParser() {
     }
     public JSONObject getJSONFromUrl(String url, Map params) {
+
+        String header = null;
         // Making HTTP request
         try {
             // defaultHttpClient
@@ -57,6 +60,12 @@ public class JSONParser {
             HttpResponse httpResponse = httpClient.execute(httpPost);
             HttpEntity httpEntity = httpResponse.getEntity();
             is = httpEntity.getContent();
+            if(httpResponse.getFirstHeader("set-cookie") != null)
+            {
+                header = httpResponse.getFirstHeader("set-cookie").getValue();
+            }
+            int i = 0;
+            System.out.println(i + "" );
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
         } catch (ClientProtocolException e) {
@@ -80,6 +89,10 @@ public class JSONParser {
         // try parse the string to a JSON object
         try {
             jObj = new JSONObject(json);
+            if(header != null)
+            {
+                jObj.put("SessionId", header.substring(0, 43));
+            }
         } catch (JSONException e) {
             Log.e("JSON Parser", "Error parsing data " + e.toString());
         }
