@@ -23,9 +23,8 @@ import amanupdater.yoav.com.updaterforaman.Server.AmanServer;
 
 public class MainActivity extends AppCompatActivity {
     private static final String TAG = "MainActivity";
-    private static final int REQUEST_SIGNUP = 0;
 
-   EditText etIdText;
+    EditText etIdText;
     EditText etPassword;
     Button bLoggingButton;
 
@@ -52,12 +51,10 @@ public class MainActivity extends AppCompatActivity {
     public void login() {
         Log.d(TAG, "Login");
 
-      //  if (!validate()) {
-          //  onLoginFailed();
-          //  return;
-       // }
+        if (!validate()) {
 
-      //  bLoggingButton.setEnabled(false);
+            return;
+       }
 
         String email = etIdText.getText().toString();
         String password = etPassword.getText().toString();
@@ -79,41 +76,9 @@ public class MainActivity extends AppCompatActivity {
         } catch (JSONException e) {
             e.printStackTrace();
         }
-        // TODO: Implement your own authentication logic here.
-
-
 
     }
 
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == REQUEST_SIGNUP) {
-            if (resultCode == RESULT_OK) {
-
-                // TODO: Implement successful signup logic here
-                // By default we just finish the Activity and log them in automatically
-                this.finish();
-            }
-        }
-    }
-
-    @Override
-    public void onBackPressed() {
-        // disable going back to the MainActivity
-        moveTaskToBack(true);
-    }
-
-    public void onLoginSuccess() {
-        bLoggingButton.setEnabled(true);
-        finish();
-    }
-
-    public void onLoginFailed() {
-        Toast.makeText(getBaseContext(), "Login failed", Toast.LENGTH_LONG).show();
-
-        bLoggingButton.setEnabled(true);
-    }
 
     public boolean validate() {
         boolean valid = true;
@@ -121,15 +86,15 @@ public class MainActivity extends AppCompatActivity {
         String email = etIdText.getText().toString();
         String password = etPassword.getText().toString();
 
-        if (email.isEmpty() || !android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
-            etIdText.setError("enter a valid email address");
+        if (email.isEmpty()) {
+            etIdText.setError("enter a valid id");
             valid = false;
         } else {
             etIdText.setError(null);
         }
 
-        if (password.isEmpty() || password.length() < 4 || password.length() > 10) {
-            etPassword.setError("between 4 and 10 alphanumeric characters");
+        if (password.isEmpty() || password.length() < 4 || password.length() > 20) {
+            etPassword.setError("between 4 and 20 alphanumeric characters");
             valid = false;
         } else {
             etPassword.setError(null);
