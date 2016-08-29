@@ -57,6 +57,10 @@ public class AmanMainActivity extends AppCompatActivity {
         Element element = doc.getElementById("ctl00_ctl00_cphMain_CPHMainContent_divSection1");
         Elements coursesNames = element.getElementsByClass("CourseName");
         Elements coursesStatus = element.getElementsByClass("CourseStatus");
+        Elements eventsNames = doc.getElementsByClass("EventName");
+        Elements eventPlace = doc.getElementsByClass("EventPlace");
+        Elements eventDate = doc.getElementsByClass("EventDate");
+
         Element lastUpdate = doc.getElementById("ctl00_ctl00_cphMain_CPHMainContent_lblLastUpdate");
 
         for(int i = 0; i < coursesNames.size(); i++)
@@ -75,8 +79,8 @@ public class AmanMainActivity extends AppCompatActivity {
         GroupItem item1 = new GroupItem();
         item1.title = "מה חדש?";
         ChildItem child2 = new ChildItem();
-        child2.title = lastUpdate.text();
-        child2.hint = "";
+        child2.title = "תאריך עדכון אחרון";
+        child2.hint = lastUpdate.text();
         item1.items.add(child2);
         items.add(item1);
 
@@ -84,19 +88,25 @@ public class AmanMainActivity extends AppCompatActivity {
 
         GroupItem item2 = new GroupItem();
         item2.title = "מסלולים";
-
         for(int i = 1; i < coursesNames.size(); i++)
         {
-
             ChildItem child = new ChildItem();
             child.title = coursesNames.get(i).text();
             child.hint = coursesStatus.get(i).text();
-
             item2.items.add(child);
-
         }
-
         items.add(item2);
+
+        GroupItem item3 = new GroupItem();
+        item3.title = "אירועים";
+        for(int i = 1; i < eventsNames.size(); i++)
+        {
+            ChildItem child = new ChildItem();
+            child.title = eventsNames.get(i).text();
+            child.hint = "התרחש ב - "  + eventPlace.get(i).text() + " בתאריך " + eventDate.get(i).text();
+            item3.items.add(child);
+        }
+        items.add(item3);
 
 
 
