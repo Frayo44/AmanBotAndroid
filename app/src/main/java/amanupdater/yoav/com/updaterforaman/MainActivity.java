@@ -82,6 +82,12 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+    @Override
+    public void onBackPressed() {
+        finish();
+    }
+
+
     public boolean validate() {
         boolean valid = true;
 
