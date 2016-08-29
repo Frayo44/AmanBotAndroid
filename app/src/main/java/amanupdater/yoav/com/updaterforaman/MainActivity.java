@@ -23,7 +23,6 @@ import amanupdater.yoav.com.updaterforaman.Server.AmanServer;
 
 
 public class MainActivity extends AppCompatActivity {
-    private static final String TAG = "MainActivity";
 
     EditText etIdText;
     EditText etPassword;
@@ -80,11 +79,8 @@ public class MainActivity extends AppCompatActivity {
         startActivity(intent);
         finish();
 
-        Log.d(TAG, "Login");
-
 
     }
-
 
     public boolean validate() {
         boolean valid = true;

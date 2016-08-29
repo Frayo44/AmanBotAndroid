@@ -1,6 +1,8 @@
 package amanupdater.yoav.com.updaterforaman.Server;
 
+import android.annotation.TargetApi;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.util.Log;
 
 import org.apache.commons.io.IOUtils;
@@ -32,7 +34,20 @@ public class AmanServer {
             jsonObject = new RequestPost("/Modiin/AuthenticationService.asmx/Authenticate", id, password).execute().get();
             return jsonObject;
         } catch (Exception e) {
-            Log.d(Consts.TAG, "Error in getNearPokemonsByCordinates function" + e.getMessage());
+            Log.d(Consts.TAG, "Error in login function" + e.getMessage());
+            return null;
+        }
+    }
+
+    public static String requestData(String sessinId, String uid) {
+
+        String result = null;
+
+        try {
+            result = new RequestGet("/modiin/Kiosk.aspx?catId=59951", sessinId, uid).execute().get();
+            return result;
+        } catch (Exception e) {
+            Log.d(Consts.TAG, "Error in requestData function" + e.getMessage());
             return null;
         }
     }
@@ -72,7 +87,7 @@ public class AmanServer {
         }
     }
 
-    private static class RequestGet extends AsyncTask<String, String, JSONObject> {
+    private static class RequestGet extends AsyncTask<String, String, String> {
 
         String request;
         String sessionId, uid;
@@ -83,24 +98,20 @@ public class AmanServer {
             this.uid = uid;
         }
 
+        @TargetApi(Build.VERSION_CODES.KITKAT)
         @Override
-        protected JSONObject doInBackground(String... args) {
-            JSONParser json = new JSONParser();
+        protected String doInBackground(String... args) {
             String myUrl = Consts.REQUEST_PREFIX + "" + request;
             try {
                 URL url = new URL(myUrl);
                 URLConnection urlConnection = url.openConnection();
+                urlConnection.setRequestProperty("Cookie", "ASPSESSIONIDSGRSSDRS=LBIJJFCDJIBEHCCJDDKBHMAI;" +  sessionId + "ASPSESSIONIDSESTSCRS=CBDPGLMDOJHPHGKPIOEOPINL;" + "ASPSESSIONIDSERRTASS=HHBPNGHAOCNEHPKGOBEJLNHL; _pk_ref.185.ccce=%5B%22%22%2C%22%22%2C1472290412%2C%22https%3A%2F%2Fwww.google.co.il%2F%22%5D; arp_scroll_position=66.66666666666667; _pk_id.185.ccce=a65407994cbf27ce.1465548881.95.1472291036.1472290412.; _pk_ses.185.ccce=*; uid=" + uid + "");
                 InputStream in = urlConnection.getInputStream();
 
-                String result = IOUtils.toString(in, StandardCharsets.UTF_8);
+                String result = IOUtils.toString(in, "windows-1255");
 
-                try {
-                    JSONObject obj = new JSONObject(result);
-                    Log.d(Consts.TAG, obj.toString());
-                    return obj;
-                } catch (Throwable t) {
-                    Log.e(Consts.TAG, "Could not parse malformed JSON: \"" + json + "\"");
-                }
+                 return result;
+
             } catch (ClientProtocolException e) {
                 Log.d(Consts.TAG , e.toString() + myUrl);
             } catch (IOException e) {
@@ -111,13 +122,6 @@ public class AmanServer {
 
         }
 
-
-
-        @Override
-        protected void onPostExecute(JSONObject json) {
-
-
-        }
     }
 
 }
