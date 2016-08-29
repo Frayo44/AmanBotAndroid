@@ -1,20 +1,30 @@
 package amanupdater.yoav.com.updaterforaman;
 
+import android.content.Context;
 import android.content.Intent;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.accessibility.AccessibilityManager;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ExpandableListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+
+import amanupdater.yoav.com.updaterforaman.AnimatedExpandableListView.AnimatedExpandableListAdapter;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 import org.w3c.dom.Text;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import amanupdater.yoav.com.updaterforaman.Server.AmanServer;
 
@@ -22,6 +32,9 @@ import amanupdater.yoav.com.updaterforaman.Server.AmanServer;
  * Created by Yoav on 8/28/2016.
  */
 public class AmanMainActivity extends AppCompatActivity {
+
+    private AnimatedExpandableListView listView;
+    private ExampleAdapter adapter;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -54,15 +67,189 @@ public class AmanMainActivity extends AppCompatActivity {
 
         tvLastUpdate.setText("Last Update: " + lastUpdate.text() + '\n');
 
-      //  Toast.makeText(this, "Recieved: " + html, Toast.LENGTH_SHORT).show();
+
+        List<GroupItem> items = new ArrayList<GroupItem>();
+
+        // Populate our list with groups and it's children
+
+        GroupItem item1 = new GroupItem();
+        item1.title = "מה חדש?";
+        ChildItem child2 = new ChildItem();
+        child2.title = lastUpdate.text();
+        child2.hint = "";
+        item1.items.add(child2);
+        items.add(item1);
 
 
+
+        GroupItem item2 = new GroupItem();
+        item2.title = "מסלולים";
+
+        for(int i = 1; i < coursesNames.size(); i++)
+        {
+
+            ChildItem child = new ChildItem();
+            child.title = coursesNames.get(i).text();
+            child.hint = coursesStatus.get(i).text();
+
+            item2.items.add(child);
+
+        }
+
+        items.add(item2);
+
+
+
+        adapter = new ExampleAdapter(this);
+        adapter.setData(items);
+
+        listView = (AnimatedExpandableListView) findViewById(R.id.listView);
+        listView.setAdapter(adapter);
+
+        // In order to show animations, we need to use a custom click handler
+        // for our ExpandableListView.
+        listView.setOnGroupClickListener(new ExpandableListView.OnGroupClickListener() {
+
+            @Override
+            public boolean onGroupClick(ExpandableListView parent, View v, int groupPosition, long id) {
+                // We call collapseGroupWithAnimation(int) and
+                // expandGroupWithAnimation(int) to animate group
+                // expansion/collapse.
+                if (listView.isGroupExpanded(groupPosition)) {
+                    listView.collapseGroupWithAnimation(groupPosition);
+                } else {
+                    listView.expandGroupWithAnimation(groupPosition);
+                }
+                return true;
+            }
+
+        });
+
+        listView.setChildDivider(new ColorDrawable(android.R.color.transparent));
+
+
+    }
+
+    private static class GroupItem {
+        String title;
+        List<ChildItem> items = new ArrayList<ChildItem>();
+    }
+
+    private static class ChildItem {
+        String title;
+        String hint;
+    }
+
+    private static class ChildHolder {
+        TextView title;
+        TextView hint;
+    }
+
+    private static class GroupHolder {
+        TextView title;
     }
 
     @Override
     public void onBackPressed() {
         finish();
     }
+
+    /**
+     * Adapter for our list of {@link GroupItem}s.
+     */
+    private class ExampleAdapter extends AnimatedExpandableListAdapter {
+        private LayoutInflater inflater;
+
+        private List<GroupItem> items;
+
+        public ExampleAdapter(Context context) {
+            inflater = LayoutInflater.from(context);
+        }
+
+        public void setData(List<GroupItem> items) {
+            this.items = items;
+        }
+
+        @Override
+        public ChildItem getChild(int groupPosition, int childPosition) {
+            return items.get(groupPosition).items.get(childPosition);
+        }
+
+        @Override
+        public long getChildId(int groupPosition, int childPosition) {
+            return childPosition;
+        }
+
+        @Override
+        public View getRealChildView(int groupPosition, int childPosition, boolean isLastChild, View convertView, ViewGroup parent) {
+            ChildHolder holder;
+            ChildItem item = getChild(groupPosition, childPosition);
+            if (convertView == null) {
+                holder = new ChildHolder();
+                convertView = inflater.inflate(R.layout.list_item, parent, false);
+                holder.title = (TextView) convertView.findViewById(R.id.textTitle);
+                holder.hint = (TextView) convertView.findViewById(R.id.textHint);
+                convertView.setTag(holder);
+            } else {
+                holder = (ChildHolder) convertView.getTag();
+            }
+
+            holder.title.setText(item.title);
+            holder.hint.setText(item.hint);
+
+            return convertView;
+        }
+
+        @Override
+        public int getRealChildrenCount(int groupPosition) {
+            return items.get(groupPosition).items.size();
+        }
+
+        @Override
+        public GroupItem getGroup(int groupPosition) {
+            return items.get(groupPosition);
+        }
+
+        @Override
+        public int getGroupCount() {
+            return items.size();
+        }
+
+        @Override
+        public long getGroupId(int groupPosition) {
+            return groupPosition;
+        }
+
+        @Override
+        public View getGroupView(int groupPosition, boolean isExpanded, View convertView, ViewGroup parent) {
+            GroupHolder holder;
+            GroupItem item = getGroup(groupPosition);
+            if (convertView == null) {
+                holder = new GroupHolder();
+                convertView = inflater.inflate(R.layout.group_item, parent, false);
+                holder.title = (TextView) convertView.findViewById(R.id.textTitle);
+                convertView.setTag(holder);
+            } else {
+                holder = (GroupHolder) convertView.getTag();
+            }
+
+            holder.title.setText(item.title);
+
+            return convertView;
+        }
+
+        @Override
+        public boolean hasStableIds() {
+            return true;
+        }
+
+        @Override
+        public boolean isChildSelectable(int arg0, int arg1) {
+            return true;
+        }
+
+    }
+
 
 
 }

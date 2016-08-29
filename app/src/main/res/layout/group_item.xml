@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="48dp"
+    android:orientation="vertical"
+    android:paddingRight="10dp"
+    android:paddingLeft="40dp">
+
+    <TextView
+        android:id="@+id/textTitle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="right"
+        android:text="Location"
+        android:paddingStart="16dp"
+        android:textColor="@color/textColor"
+        android:alpha="0.87"
+        android:paddingTop="8dp"
+        android:textSize="18sp" />
+
+</LinearLayout>
