@@ -3,6 +3,7 @@ package amanupdater.yoav.com.updaterforaman;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.drawable.ColorDrawable;
+import android.media.Image;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
@@ -12,6 +13,7 @@ import android.view.accessibility.AccessibilityManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ExpandableListView;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -44,7 +46,7 @@ public class AmanMainActivity extends AppCompatActivity {
         Intent intent = getIntent();
         String sessionID = intent.getStringExtra("SessionId");
         String misparMoamad = intent.getStringExtra("MisparMoamad");
-        Toast.makeText(this, "SessionId: " + sessionID, Toast.LENGTH_SHORT).show();
+    //    Toast.makeText(this, "SessionId: " + sessionID, Toast.LENGTH_SHORT).show();
         TextView tvCourses = (TextView) findViewById(R.id.tvAmanCourses);
         TextView tvLastUpdate = (TextView) findViewById(R.id.tvLastUpdate);
 
@@ -78,6 +80,7 @@ public class AmanMainActivity extends AppCompatActivity {
 
         GroupItem item1 = new GroupItem();
         item1.title = "מה חדש?";
+        item1.icon = R.drawable.question;
         ChildItem child2 = new ChildItem();
         child2.title = "תאריך עדכון אחרון";
         child2.hint = lastUpdate.text();
@@ -88,6 +91,7 @@ public class AmanMainActivity extends AppCompatActivity {
 
         GroupItem item2 = new GroupItem();
         item2.title = "מסלולים";
+        item2.icon = R.drawable.blackboard;
         for(int i = 1; i < coursesNames.size(); i++)
         {
             ChildItem child = new ChildItem();
@@ -99,6 +103,7 @@ public class AmanMainActivity extends AppCompatActivity {
 
         GroupItem item3 = new GroupItem();
         item3.title = "אירועים";
+        item3.icon = R.drawable.calendar;
         for(int i = 1; i < eventsNames.size(); i++)
         {
             ChildItem child = new ChildItem();
@@ -142,6 +147,7 @@ public class AmanMainActivity extends AppCompatActivity {
 
     private static class GroupItem {
         String title;
+        int icon;
         List<ChildItem> items = new ArrayList<ChildItem>();
     }
 
@@ -157,6 +163,7 @@ public class AmanMainActivity extends AppCompatActivity {
 
     private static class GroupHolder {
         TextView title;
+        ImageView icon;
     }
 
     @Override
@@ -238,12 +245,14 @@ public class AmanMainActivity extends AppCompatActivity {
                 holder = new GroupHolder();
                 convertView = inflater.inflate(R.layout.group_item, parent, false);
                 holder.title = (TextView) convertView.findViewById(R.id.textTitle);
+                holder.icon = (ImageView) convertView.findViewById(R.id.ivIcon);
                 convertView.setTag(holder);
             } else {
                 holder = (GroupHolder) convertView.getTag();
             }
 
             holder.title.setText(item.title);
+            holder.icon.setImageResource(item.icon);
 
             return convertView;
         }

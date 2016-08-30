@@ -39,6 +39,9 @@ public class MainActivity extends AppCompatActivity {
         etPassword = (EditText) findViewById(R.id.etPassword);
         bLoggingButton = (Button) findViewById(R.id.btn_login);
 
+
+
+
         if(intent != null)
         {
             String err = intent.getStringExtra("error");

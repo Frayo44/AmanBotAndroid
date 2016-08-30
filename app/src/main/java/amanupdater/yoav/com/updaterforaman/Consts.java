@@ -7,4 +7,6 @@ public class Consts {
 
     public static String REQUEST_PREFIX = "https://www.aman.idf.il";
     public static String TAG = "aman updater";
+    public static String KEY_ID = "ID_TAG";
+    public static String KEY_PASS = "KEY_PASS";
 }

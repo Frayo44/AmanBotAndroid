@@ -3,6 +3,7 @@ package amanupdater.yoav.com.updaterforaman;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.widget.Toast;
 
@@ -40,6 +41,23 @@ public class LoadingActivity extends Activity {
          id = intent.getStringExtra("id");
          password = intent.getStringExtra("password");
 
+        if(intent == null || id == null || password == null)
+        {
+            SharedPreferences prefs = getSharedPreferences(Consts.TAG, MODE_PRIVATE);
+            String idPrefs = prefs.getString(Consts.KEY_ID, null);
+            String passPrefs = prefs.getString(Consts.KEY_PASS, null);
+            if (idPrefs == null && idPrefs == null) {
+                Intent loginIntent = new Intent(LoadingActivity.this, MainActivity.class);
+                startActivity(loginIntent);
+                finish();
+            } else {
+                id = idPrefs;
+                password = passPrefs;
+            }
+
+
+        }
+
 
         animatedCircleLoadingView = (AnimatedCircleLoadingView) findViewById(R.id.circle_loading_view);
         startLoading();
@@ -53,6 +71,10 @@ public class LoadingActivity extends Activity {
                     startActivity(intent);
                     finish();
                 } else {
+                    SharedPreferences.Editor editor = getSharedPreferences(Consts.TAG, MODE_PRIVATE).edit();
+                    editor.putString(Consts.KEY_ID, id);
+                    editor.putString(Consts.KEY_PASS, password);
+                    editor.apply();
                     Intent intent = new Intent(LoadingActivity.this, AmanMainActivity.class);
                     intent.putExtra("SessionId", sessionId);
                     intent.putExtra("MisparMoamad", misparMoamad);

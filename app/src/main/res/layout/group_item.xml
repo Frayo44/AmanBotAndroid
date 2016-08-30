@@ -43,7 +43,7 @@
 
         <ImageView
             android:layout_weight="0.2"
-            android:id="@+id/favorite"
+            android:id="@+id/ivIcon"
             android:layout_width="54dp"
             android:layout_height="54dp"
             android:paddingRight="16dp"
