@@ -5,13 +5,14 @@ import android.os.AsyncTask;
 import android.os.Build;
 import android.util.Log;
 
-import org.apache.commons.io.IOUtils;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.ClientProtocolException;
 import org.json.JSONObject;
 
+import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.net.URL;
 import java.net.URLConnection;
 import java.nio.charset.StandardCharsets;
@@ -108,7 +109,16 @@ public class AmanServer {
                 urlConnection.setRequestProperty("Cookie", "ASPSESSIONIDSGRSSDRS=LBIJJFCDJIBEHCCJDDKBHMAI;" +  sessionId + "ASPSESSIONIDSESTSCRS=CBDPGLMDOJHPHGKPIOEOPINL;" + "ASPSESSIONIDSERRTASS=HHBPNGHAOCNEHPKGOBEJLNHL; _pk_ref.185.ccce=%5B%22%22%2C%22%22%2C1472290412%2C%22https%3A%2F%2Fwww.google.co.il%2F%22%5D; arp_scroll_position=66.66666666666667; _pk_id.185.ccce=a65407994cbf27ce.1465548881.95.1472291036.1472290412.; _pk_ses.185.ccce=*; uid=" + uid + "");
                 InputStream in = urlConnection.getInputStream();
 
-                String result = IOUtils.toString(in, "windows-1255");
+
+                BufferedReader reader = new BufferedReader(new InputStreamReader(
+                        in, "windows-1255"));
+                StringBuilder sb = new StringBuilder();
+                String line = null;
+                while ((line = reader.readLine()) != null) {
+                    sb.append(line + "\n");
+                }
+
+                String result = sb.toString();
 
                  return result;
 
