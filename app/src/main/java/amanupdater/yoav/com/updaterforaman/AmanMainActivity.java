@@ -126,7 +126,7 @@ public class AmanMainActivity extends AppCompatActivity {
         listView = (AnimatedExpandableListView) findViewById(R.id.listView);
         listView.setAdapter(adapter);
 
-        // In order to show animations, we need to use a custom click handler
+        // In oroder to show animations, we need to use a custom click handler
         // for our ExpandableListView.
         listView.setOnGroupClickListener(new ExpandableListView.OnGroupClickListener() {
 
