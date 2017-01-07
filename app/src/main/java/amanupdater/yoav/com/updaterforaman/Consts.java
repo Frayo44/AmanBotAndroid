@@ -9,4 +9,5 @@ public class Consts {
     public static String TAG = "aman updater";
     public static String KEY_ID = "ID_TAG";
     public static String KEY_PASS = "KEY_PASS";
+    public static String KEY_LASTUPDATE = "KEY_LASTUPDATE";
 }

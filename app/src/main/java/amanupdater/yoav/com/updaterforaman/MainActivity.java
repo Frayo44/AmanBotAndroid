@@ -1,9 +1,14 @@
 package amanupdater.yoav.com.updaterforaman;
 import android.app.Activity;
+import android.app.AlarmManager;
 import android.app.IntentService;
+import android.app.PendingIntent;
 import android.app.ProgressDialog;
+import android.content.Context;
+import android.content.IntentFilter;
 import android.os.Bundle;
 
+import android.os.SystemClock;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 
@@ -17,6 +22,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.Calendar;
 import java.util.logging.ConsoleHandler;
 
 import amanupdater.yoav.com.updaterforaman.Server.AmanServer;
@@ -33,14 +39,12 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
+
         Intent intent = getIntent();
 
         etIdText = (EditText) findViewById(R.id.etId);
         etPassword = (EditText) findViewById(R.id.etPassword);
         bLoggingButton = (Button) findViewById(R.id.btn_login);
-
-
-
 
         if(intent != null)
         {
@@ -74,7 +78,6 @@ public class MainActivity extends AppCompatActivity {
 
         String id = etIdText.getText().toString();
         String password = etPassword.getText().toString();
-
 
         Intent intent = new Intent(MainActivity.this, LoadingActivity.class);
         intent.putExtra("password", password);

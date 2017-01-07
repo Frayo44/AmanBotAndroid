@@ -1,10 +1,14 @@
 package amanupdater.yoav.com.updaterforaman;
 
+import android.app.AlarmManager;
+import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.drawable.ColorDrawable;
 import android.media.Image;
 import android.os.Bundle;
+import android.os.SystemClock;
 import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -51,7 +55,6 @@ public class AmanMainActivity extends AppCompatActivity {
         TextView tvLastUpdate = (TextView) findViewById(R.id.tvLastUpdate);
 
 
-
         String html = AmanServer.requestData(sessionID, misparMoamad);
 
         Document doc = Jsoup.parse(html);
@@ -73,6 +76,8 @@ public class AmanMainActivity extends AppCompatActivity {
 
         tvLastUpdate.setText("Last Update: " + lastUpdate.text() + '\n');
 
+        SharedPreferences prefs = this.getSharedPreferences(Consts.TAG, 0);
+        prefs.edit().putString(Consts.KEY_LASTUPDATE, lastUpdate.text()).apply();
 
         List<GroupItem> items = new ArrayList<GroupItem>();
 
@@ -169,6 +174,17 @@ public class AmanMainActivity extends AppCompatActivity {
     @Override
     public void onBackPressed() {
         finish();
+    }
+
+
+    @Override
+    protected void onDestroy() {
+      /*  Intent receiverIntent = new Intent(this, Receiver.class);
+        PendingIntent sender = PendingIntent.getBroadcast(this, 123456789, receiverIntent, 0);
+
+        AlarmManager alarmManager = (AlarmManager)this.getSystemService(Context.ALARM_SERVICE);
+        alarmManager.setRepeating(AlarmManager.ELAPSED_REALTIME_WAKEUP, SystemClock.elapsedRealtime(), alarmManager.INTERVAL_DAY, sender); */
+        super.onDestroy();
     }
 
     /**

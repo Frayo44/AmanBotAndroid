@@ -26,6 +26,7 @@ dependencies {
     compile 'com.android.support:design:24.0.0'
 
     compile project(':library')
+
     compile 'org.jsoup:jsoup:1.9.2'
     compile 'com.bignerdranch.android:expandablerecyclerview:2.1.1'
 }
